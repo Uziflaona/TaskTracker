@@ -41,4 +41,39 @@ public class MySql {
         }
         return fieldValues;
     }
+
+    public static String getTasks () {
+        String fieldValues = new String();
+        try {
+            connection = DriverManager.getConnection(url, user, password);
+
+            statement = connection.createStatement();
+
+            resultSet = statement.executeQuery("select DISTINCT * from task;");
+
+            while (resultSet.next()) {
+                fieldValues += ("<li>\n" +
+                        "      <table border=\"1\">\n" +
+                        "        <tr>\n" +
+                        "          <td colspan=\"4\">" + resultSet.getString(2) + "</td>\n" +
+                        "          <td>" + resultSet.getString(4) + "</td>\n" +
+                        "        </tr>\n" +
+                        "        <tr>\n" +
+                        "          <td>Priority: " + resultSet.getString(5) + "</td>\n" +
+                        "          <td>Project: " + resultSet.getString(6) + "</td>\n" +
+                        "          <td colspan=\"3\">" + resultSet.getString(9) + "</td>\n" +
+                        "        </tr>\n" +
+                        "      </table>\n" +
+                        "    </li>");
+            }
+        } catch (SQLException sqlEx) {
+            sqlEx.printStackTrace();
+        }finally {
+            //close connection ,stmt and resultset here
+            try { connection.close(); } catch(SQLException se) { }
+            try { statement.close(); } catch(SQLException se) { }
+            try { resultSet.close(); } catch(SQLException se) { }
+        }
+        return fieldValues;
+    }
 }

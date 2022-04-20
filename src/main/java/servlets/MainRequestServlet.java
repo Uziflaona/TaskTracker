@@ -27,6 +27,8 @@ public class MainRequestServlet extends HttpServlet {
         pageVariables.put("Priority", mySql.getFilters("priority"));
         pageVariables.put("Project", mySql.getFilters("project"));
 
+        pageVariables.put("Tasks", mySql.getTasks());
+
         response.setContentType("text/html;charset=utf-8");
 
         response.getWriter().println(PageGenerator.instance().getPage("tasks.html", pageVariables));
