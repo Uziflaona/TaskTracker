@@ -7,6 +7,7 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 import java.io.IOException;
 
 import java.util.ArrayList;
@@ -21,17 +22,24 @@ public class MainRequestServlet extends HttpServlet {
                       HttpServletResponse response) throws
             ServletException, IOException {
         Map<String, Object> pageVariables = createPageVariablesMap(request);
+
+        HttpSession session=request.getSession(false);
+        if (session!=null) {
 //        pageVariables.put("message", "");
-        pageVariables.put("Assignee", mySql.getFilters("Assignee"));
-        pageVariables.put("Status", mySql.getFilters("status"));
-        pageVariables.put("Priority", mySql.getFilters("priority"));
-        pageVariables.put("Project", mySql.getFilters("project"));
+            pageVariables.put("username", session.getAttribute("username"));
+            pageVariables.put("Assignee", mySql.getFilters("Assignee"));
+            pageVariables.put("Status", mySql.getFilters("status"));
+            pageVariables.put("Priority", mySql.getFilters("priority"));
+            pageVariables.put("Project", mySql.getFilters("project"));
 
-        pageVariables.put("Tasks", mySql.getTasks());
+            pageVariables.put("Tasks", mySql.getTasks());
 
-        response.setContentType("text/html;charset=utf-8");
+            response.setContentType("text/html;charset=utf-8");
 
-        response.getWriter().println(PageGenerator.instance().getPage("tasks.html", pageVariables));
+            response.getWriter().println(PageGenerator.instance().getPage("tasks.html", pageVariables));
+        } else {
+            response.sendRedirect("/");
+        }
         response.setStatus(HttpServletResponse.SC_OK);
 
     }

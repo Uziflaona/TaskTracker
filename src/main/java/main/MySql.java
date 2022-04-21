@@ -53,7 +53,8 @@ public class MySql {
                 fieldValues += ("<li>\n" +
                         "      <table border=\"1\">\n" +
                         "        <tr>\n" +
-                        "          <td colspan=\"4\">" + resultSet.getString(2) + "</td>\n" +
+                        "          <td colspan=\"4\"> <a href=\"task?taskname=" + resultSet.getString(2) +
+                        "\">" + resultSet.getString(2) + "</a></td>\n" +
                         "          <td>" + resultSet.getString(4) + "</td>\n" +
                         "        </tr>\n" +
                         "        <tr>\n" +

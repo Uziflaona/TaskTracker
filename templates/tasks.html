@@ -1,5 +1,5 @@
 <!doctype html>
-<title>Example</title>
+<title>Tasks</title>
 <style>
 * {
   box-sizing: border-box;
@@ -41,13 +41,13 @@ header, footer, article, nav, aside {
 }
 </style>
 <body>
-<header>Header</header>
+<header>${username}</header>
 <div id="main">
   <article>
     ${Tasks}
   </article>
   <nav>
-    <form action="/tasks.html" method="POST">
+    <form action="/tasks" method="POST">
     <p>Назначено на:</p>
     <select name="Assignee">
       ${Assignee}

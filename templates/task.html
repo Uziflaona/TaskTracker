@@ -1,0 +1,102 @@
+<!doctype html>
+<title>Task</title>
+<style>
+* {
+  box-sizing: border-box;
+}
+
+body {
+  display: flex;
+  min-height: 100vh;
+  flex-direction: column;
+  margin: 0;
+}
+
+table {
+  width: 100%;
+  min-height: 50vh;
+}
+
+div {
+  border: thin solid black;
+
+      display:block;
+      overflow: hidden;
+}
+
+#main {
+  display: flex;
+  flex: 1;
+}
+#main > article {
+
+
+  flex: 1;
+}
+#main > nav,
+#main > aside {
+  flex: 0 0 20vw;
+  background: beige;
+}
+#main > nav {
+  order: -1;
+}
+header, footer {
+  background: yellowgreen;
+  height: 5vh;
+}
+header, footer, article, nav, aside {
+  padding: 1em;
+}
+</style>
+<body>
+<header>Header</header>
+<div id="main">
+    <article>
+        <form>
+            <table border="1" >
+                <tr>
+                    <td>${id}</td>
+                    <td colspan="3"><div contenteditable>${name}</div></td>
+                    <td>${assignee}</td>
+                    <td>${priority}</td>
+                </tr>
+                <tr>
+                    <td>${status}</td>
+                    <td><div contenteditable>${project}</div></td>
+                    <td><div contenteditable>${contact_person}</div></td>
+                    <td><div contenteditable>${contact}</div></td>
+                    <td>${creator}</td>
+                    <td>${create_time}</td>
+                </tr>
+                <tr style="height:60%">
+                    <td colspan="6" contenteditable><div>${description}</div></td>
+                </tr>
+            </table>
+        </form>
+    </article>
+    <nav>
+        <form action="/tasks" method="GET">
+            <p>Назначено на:</p>
+            <select name="Assignee">
+                ${Assignee}
+            </select>
+            <p>Статус:</p>
+            <select name="Status">
+                ${Status}
+            </select>
+            <p>Приоритет:</p>
+            <select name="Priority">
+                ${Priority}
+            </select>
+            <p>Проект:</p>
+            <select name="Project">
+                ${Project}
+            </select>
+            <input type="submit" value="Ok">
+        </form>
+    </nav>
+    <!--<aside>Aside</aside> -->
+</div>
+<footer>Footer</footer>
+</body>

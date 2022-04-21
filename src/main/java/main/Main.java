@@ -10,10 +10,12 @@ public class Main {
     public static void main (String[] args) throws Exception {
         MainRequestServlet mainRequestServlet = new MainRequestServlet();
         LoginRequestServlet loginRequestServlet = new LoginRequestServlet();
+        EditRequestServlet editRequestServlet = new EditRequestServlet();
 
         ServletContextHandler context = new ServletContextHandler(ServletContextHandler.SESSIONS);
         context.addServlet(new ServletHolder(loginRequestServlet), "/*");
-        context.addServlet(new ServletHolder(mainRequestServlet), "/task");
+        context.addServlet(new ServletHolder(mainRequestServlet), "/tasks");
+        context.addServlet(new ServletHolder(editRequestServlet), "/task");
 
         Server server = new Server(8080);
         server.setHandler(context);
