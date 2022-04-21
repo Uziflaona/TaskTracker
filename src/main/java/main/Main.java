@@ -9,9 +9,10 @@ import templater.*;
 public class Main {
     public static void main (String[] args) throws Exception {
         MainRequestServlet mainRequestServlet = new MainRequestServlet();
+        LoginRequestServlet loginRequestServlet = new LoginRequestServlet();
 
         ServletContextHandler context = new ServletContextHandler(ServletContextHandler.SESSIONS);
-        context.addServlet(new ServletHolder(mainRequestServlet), "/*");
+        context.addServlet(new ServletHolder(loginRequestServlet), "/*");
 
         Server server = new Server(8080);
         server.setHandler(context);
