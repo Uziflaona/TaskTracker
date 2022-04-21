@@ -58,7 +58,7 @@ public class MainRequestServlet extends HttpServlet {
 //        pageVariables.put("priority", assignee == null ? "" : priority);
 //        pageVariables.put("project", assignee == null ? "" : project);
 
-//        response.getWriter().println(PageGenerator.instance().getPage("page.html", pageVariables));
+        response.getWriter().println(PageGenerator.instance().getPage("task.html", pageVariables));
     }
 
     private static Map<String, Object> createPageVariablesMap(HttpServletRequest request) {

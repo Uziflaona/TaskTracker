@@ -1,7 +1,5 @@
 package main;
 
-import templater.PageGenerator;
-
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
@@ -75,5 +73,37 @@ public class MySql {
             try { resultSet.close(); } catch(SQLException se) { }
         }
         return fieldValues;
+    }
+
+    public static String getAuthorization(String username, String pwd) {
+
+        String status = new String("");
+
+        try {
+            connection = DriverManager.getConnection(url, user, password);
+
+            statement = connection.createStatement();
+
+            resultSet = statement.executeQuery("select login, password from users where login = '" + username + "';");
+
+            if(resultSet.next()) {
+                if(pwd.equals(resultSet.getString(2))) {
+                    status = "Allright";
+                } else {
+                    status = "Wrong password!";
+                }
+            } else {
+                status = "Wrong username!";
+            }
+
+        } catch (SQLException sqlEx) {
+            sqlEx.printStackTrace();
+        }finally {
+            //close connection ,stmt and resultset here
+            try { connection.close(); } catch(SQLException se) { }
+            try { statement.close(); } catch(SQLException se) { }
+            try { resultSet.close(); } catch(SQLException se) { }
+        }
+        return status;
     }
 }
