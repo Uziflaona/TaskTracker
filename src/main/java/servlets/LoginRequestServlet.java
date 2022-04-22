@@ -18,7 +18,7 @@ public class LoginRequestServlet extends HttpServlet {
                       HttpServletResponse response) throws
             ServletException, IOException {
 
-        Map<String, Object> pageVariables = createPageVariablesMap(request);
+        Map<String, Object> pageVariables = new HashMap<>();
         pageVariables.put("status", "");
         response.setContentType("text/html;charset=utf-8");
         response.getWriter().println(PageGenerator.instance().getPage("login.html", pageVariables));
@@ -29,7 +29,7 @@ public class LoginRequestServlet extends HttpServlet {
     public void doPost(HttpServletRequest request,
                        HttpServletResponse response) throws
             ServletException, IOException {
-        Map<String, Object> pageVariables = createPageVariablesMap(request);
+        Map<String, Object> pageVariables = new HashMap<>();
 
         String username = request.getParameter("username");
         String password = request.getParameter("password");
@@ -52,13 +52,5 @@ public class LoginRequestServlet extends HttpServlet {
 
     }
 
-    private static Map<String, Object> createPageVariablesMap(HttpServletRequest request) {
-        Map<String, Object> pageVariables = new HashMap<>();
-//        pageVariables.put("method", request.getMethod());
-//        pageVariables.put("URL", request.getRequestURL().toString());
-//        pageVariables.put("pathInfo", request.getPathInfo());
-//        pageVariables.put("sessionId", request.getSession().getId());
-//        pageVariables.put("parameters", request.getParameterMap().toString());
-        return pageVariables;
-    }
+
 }

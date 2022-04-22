@@ -6,6 +6,8 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 public class MySql {
     private static final String url = "jdbc:mysql://localhost:3306/task_tracker";
@@ -40,20 +42,20 @@ public class MySql {
         return fieldValues;
     }
 
-    public static String getTasks () {
+    public static String getAllTasks() {
         String fieldValues = new String();
         try {
             connection = DriverManager.getConnection(url, user, password);
 
             statement = connection.createStatement();
 
-            resultSet = statement.executeQuery("select DISTINCT * from task;");
+            resultSet = statement.executeQuery("select * from task;");
 
             while (resultSet.next()) {
                 fieldValues += ("<li>\n" +
                         "      <table border=\"1\">\n" +
                         "        <tr>\n" +
-                        "          <td colspan=\"4\"> <a href=\"task?taskname=" + resultSet.getString(2) +
+                        "          <td colspan=\"4\"> <a href=\"task?taskID=" + resultSet.getString(1) +
                         "\">" + resultSet.getString(2) + "</a></td>\n" +
                         "          <td>" + resultSet.getString(4) + "</td>\n" +
                         "        </tr>\n" +
@@ -75,6 +77,48 @@ public class MySql {
         }
         return fieldValues;
     }
+
+    public static String getTasks(String assignee, String status, String priority, String project) {
+        String fieldValues = new String("");
+        try {
+            connection = DriverManager.getConnection(url, user, password);
+
+            statement = connection.createStatement();
+
+            resultSet = statement.executeQuery("select * from task where assignee = '" + assignee
+                    + "' and status = '" + status + "' and priority = '" + priority + "' and project = '"
+                    + project + "';");
+
+            while (resultSet.next()) {
+                if (resultSet.getString(1) != null) {
+                    fieldValues += ("<li>\n" +
+                            "      <table border=\"1\">\n" +
+                            "        <tr>\n" +
+                            "          <td colspan=\"4\"> <a href=\"task?taskID=" + resultSet.getString(1) +
+                            "\">" + resultSet.getString(2) + "</a></td>\n" +
+                            "          <td>" + resultSet.getString(4) + "</td>\n" +
+                            "        </tr>\n" +
+                            "        <tr>\n" +
+                            "          <td>Priority: " + resultSet.getString(5) + "</td>\n" +
+                            "          <td>Project: " + resultSet.getString(6) + "</td>\n" +
+                            "          <td colspan=\"3\">" + resultSet.getString(9) + "</td>\n" +
+                            "        </tr>\n" +
+                            "      </table>\n" +
+                            "    </li>");
+                }
+            }
+        } catch (SQLException sqlEx) {
+            sqlEx.printStackTrace();
+        }finally {
+            //close connection ,stmt and resultset here
+            try { connection.close(); } catch(SQLException se) { }
+            try { statement.close(); } catch(SQLException se) { }
+            try { resultSet.close(); } catch(SQLException se) { }
+        }
+        return fieldValues;
+    }
+
+//    public static
 
     public static String getAuthorization(String username, String pwd) {
 
@@ -106,5 +150,90 @@ public class MySql {
             try { resultSet.close(); } catch(SQLException se) { }
         }
         return status;
+    }
+
+    public static ArrayList<String> getUsers() {
+
+        ArrayList<String> namesArrayList = new ArrayList<>();
+
+        try {
+            connection = DriverManager.getConnection(url, user, password);
+
+            statement = connection.createStatement();
+
+            resultSet = statement.executeQuery("select name from users;");
+
+            while (resultSet.next()) {
+                namesArrayList.add(resultSet.getString(1));
+            }
+
+        } catch (SQLException sqlEx) {
+            sqlEx.printStackTrace();
+        }finally {
+            //close connection ,stmt and resultset here
+            try { connection.close(); } catch(SQLException se) { }
+            try { statement.close(); } catch(SQLException se) { }
+            try { resultSet.close(); } catch(SQLException se) { }
+        }
+        return namesArrayList;
+    }
+
+    public static Map<String, Object> getTask(String taskID) {
+
+        Map<String, Object> taskVariables = new HashMap<>();
+
+        try {
+            connection = DriverManager.getConnection(url, user, password);
+
+            statement = connection.createStatement();
+
+            resultSet = statement.executeQuery("select * from task where task_id = " + taskID + ";");
+            if(resultSet.next()) {
+                taskVariables.put("name", resultSet.getString(2));
+                taskVariables.put("status", resultSet.getString(3));
+                taskVariables.put("assignee", resultSet.getString(4));
+                taskVariables.put("priority", resultSet.getString(5));
+                taskVariables.put("project", resultSet.getString(6));
+                taskVariables.put("contact_person", resultSet.getString(7));
+                taskVariables.put("contact", resultSet.getString(8));
+                taskVariables.put("create_date", resultSet.getString(9));
+                taskVariables.put("creator", resultSet.getString(10));
+                taskVariables.put("description", resultSet.getString(11));
+            }
+
+        } catch (SQLException sqlEx) {
+            sqlEx.printStackTrace();
+        }finally {
+            //close connection ,stmt and resultset here
+            try { connection.close(); } catch(SQLException se) { }
+            try { statement.close(); } catch(SQLException se) { }
+            try { resultSet.close(); } catch(SQLException se) { }
+        }
+        return taskVariables;
+    }
+
+    public static String getUserName(String username) {
+
+        String name = new String("");
+
+        try {
+            connection = DriverManager.getConnection(url, user, password);
+
+            statement = connection.createStatement();
+
+            resultSet = statement.executeQuery("select name from users where login = " + username + ";");
+            resultSet.next();
+
+            name = resultSet.getString(1);
+
+        } catch (SQLException sqlEx) {
+            sqlEx.printStackTrace();
+        }finally {
+            //close connection ,stmt and resultset here
+            try { connection.close(); } catch(SQLException se) { }
+            try { statement.close(); } catch(SQLException se) { }
+            try { resultSet.close(); } catch(SQLException se) { }
+        }
+        return name;
     }
 }

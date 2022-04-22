@@ -21,23 +21,24 @@ public class MainRequestServlet extends HttpServlet {
     public void doGet(HttpServletRequest request,
                       HttpServletResponse response) throws
             ServletException, IOException {
-        Map<String, Object> pageVariables = createPageVariablesMap(request);
+        Map<String, Object> pageVariables = new HashMap<>();
 
         HttpSession session=request.getSession(false);
         if (session!=null) {
-//        pageVariables.put("message", "");
+
             pageVariables.put("username", session.getAttribute("username"));
             pageVariables.put("Assignee", mySql.getFilters("Assignee"));
-            pageVariables.put("Status", mySql.getFilters("status"));
-            pageVariables.put("Priority", mySql.getFilters("priority"));
             pageVariables.put("Project", mySql.getFilters("project"));
 
-            pageVariables.put("Tasks", mySql.getTasks());
+            pageVariables.put("Tasks", mySql.getAllTasks());
+
+
 
             response.setContentType("text/html;charset=utf-8");
 
             response.getWriter().println(PageGenerator.instance().getPage("tasks.html", pageVariables));
         } else {
+            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
             response.sendRedirect("/");
         }
         response.setStatus(HttpServletResponse.SC_OK);
@@ -47,7 +48,13 @@ public class MainRequestServlet extends HttpServlet {
     public void doPost(HttpServletRequest request,
                        HttpServletResponse response) throws
             ServletException, IOException {
-        Map<String, Object> pageVariables = createPageVariablesMap(request);
+        Map<String, Object> pageVariables = new HashMap<>();
+
+        HttpSession session=request.getSession(false);
+        if (session == null) {
+            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+            response.sendRedirect("/");
+        }
 
         response.setContentType("text/html;charset=utf-8");
 
@@ -65,18 +72,25 @@ public class MainRequestServlet extends HttpServlet {
 //        pageVariables.put("status", assignee == null ? "" : status);
 //        pageVariables.put("priority", assignee == null ? "" : priority);
 //        pageVariables.put("project", assignee == null ? "" : project);
+        pageVariables.put("username", session.getAttribute("username"));
+        pageVariables.put("Assignee", mySql.getFilters("Assignee"));
+        pageVariables.put("Project", mySql.getFilters("project"));
+        pageVariables.put("Tasks", mySql.getTasks(assignee, status, priority, project));
 
-        response.getWriter().println(PageGenerator.instance().getPage("task.html", pageVariables));
+        response.getWriter().println(PageGenerator.instance().getPage("tasks.html", pageVariables));
     }
 
-    private static Map<String, Object> createPageVariablesMap(HttpServletRequest request) {
-        Map<String, Object> pageVariables = new HashMap<>();
-//        pageVariables.put("method", request.getMethod());
-//        pageVariables.put("URL", request.getRequestURL().toString());
-//        pageVariables.put("pathInfo", request.getPathInfo());
-//        pageVariables.put("sessionId", request.getSession().getId());
-//        pageVariables.put("parameters", request.getParameterMap().toString());
-        return pageVariables;
+
+
+    private static ArrayList<String> setFirst (String element, ArrayList<String> arrayList) {
+        int indexOfElement = arrayList.indexOf(element);
+
+        if (indexOfElement > 0) {
+            arrayList.set(indexOfElement, arrayList.get(0));
+            arrayList.set(0, element);
+        }
+
+        return arrayList;
     }
 
 }

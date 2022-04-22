@@ -24,6 +24,12 @@ div {
       overflow: hidden;
 }
 
+#des {
+  height: 30vh;
+  width: 100%;
+  font-size:24px;
+}
+
 #main {
   display: flex;
   flex: 1;
@@ -50,44 +56,50 @@ header, footer, article, nav, aside {
 }
 </style>
 <body>
-<header>Header</header>
+<header>${username}</header>
 <div id="main">
     <article>
-        <form>
+        <form action="/task" method="POST">
             <table border="1" >
                 <tr>
-                    <td>${id}</td>
-                    <td colspan="3"><div contenteditable>${name}</div></td>
-                    <td>${assignee}</td>
-                    <td>${priority}</td>
+                    <td>Task_id: ${taskID}</td>
+                    <td colspan="3">Task: <input name="contact_person" value="${name}"></td>
+                    <td>Assignee: <select>${assignee}</select></td>
+                    <td>Priority: <select>${priority}</select></td>
                 </tr>
                 <tr>
-                    <td>${status}</td>
-                    <td><div contenteditable>${project}</div></td>
-                    <td><div contenteditable>${contact_person}</div></td>
-                    <td><div contenteditable>${contact}</div></td>
-                    <td>${creator}</td>
-                    <td>${create_time}</td>
+                    <td>Status: <select>${status}</select></td>
+                    <td>Project: <input name="contact_person" value="${project}"></td>
+                    <td>Contact person: <input name="contact_person" value="${contact_person}"></td>
+                    <td>Contact: <input name="contact_person" value="${contact}"></td>
+                    <td>Creator: ${creator}</td>
+                    <td>Creation time: ${create_time}</td>
                 </tr>
                 <tr style="height:60%">
-                    <td colspan="6" contenteditable><div>${description}</div></td>
+                    <td colspan="6" contenteditable>Description: <textarea type="text" name="description" id="des">${description}</textarea></td>
                 </tr>
             </table>
+            <input type="submit" value="Ok">
         </form>
     </article>
     <nav>
-        <form action="/tasks" method="GET">
+        <form action="/tasks" method="POST">
             <p>Назначено на:</p>
             <select name="Assignee">
                 ${Assignee}
             </select>
             <p>Статус:</p>
             <select name="Status">
-                ${Status}
+                <option>Backlog</option>
+                <option>Develop</option>
+                <option>Done</option>
+                <option>Obsolete</option>
             </select>
             <p>Приоритет:</p>
             <select name="Priority">
-                ${Priority}
+                <option>Low</option>
+                <option>Mid</option>
+                <option>High</option>
             </select>
             <p>Проект:</p>
             <select name="Project">
