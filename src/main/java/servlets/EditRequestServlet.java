@@ -85,7 +85,11 @@ public class EditRequestServlet extends HttpServlet {
     public void doPost(HttpServletRequest request,
                        HttpServletResponse response) throws
             ServletException, IOException {
-
+        HttpSession session=request.getSession(false);
+        if (session == null) {
+            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+            response.sendRedirect("/");
+        }
     }
 
     private static ArrayList<String> setFirst (String element, ArrayList<String> arrayList) {

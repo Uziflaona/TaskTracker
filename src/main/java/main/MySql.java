@@ -85,9 +85,87 @@ public class MySql {
 
             statement = connection.createStatement();
 
-            resultSet = statement.executeQuery("select * from task where assignee = '" + assignee
-                    + "' and status = '" + status + "' and priority = '" + priority + "' and project = '"
-                    + project + "';");
+            String where = new String("where");
+
+            if (assignee.equals("*")) {
+                assignee = "";
+                if (status.equals("*")) {
+                    status = "";
+                    if (priority.equals("*")) {
+                        priority = "";
+                        if (project.equals("*")) {
+                            project = ";";
+                            where = "";
+                        } else {
+                            project = "project = '" + project + "';";
+                        }
+                    } else {
+                        priority = "priority = '" + priority + "'";
+                        if (project.equals("*")) {
+                            project = ";";
+                        } else {
+                            project = " and project = '" + project + "';";
+                        }
+                    }
+                } else {
+                    status = "status = '" + status + "'";
+                    if (priority.equals("*")) {
+                        priority = "";
+                        if (project.equals("*")) {
+                            project = ";";
+                        } else {
+                            project = "and project = '" + project + "';";
+                        }
+                    } else {
+                        priority = "and priority = '" + priority + "'";
+                        if (project.equals("*")) {
+                            project = ";";
+                        } else {
+                            project = "and project = '" + project + "';";
+                        }
+                    }
+                }
+            } else {
+                assignee = "assignee = '" + assignee + "'";
+                if (status.equals("*")) {
+                    status = "*";
+                    if (priority.equals("*")) {
+                        priority = "";
+                        if (project.equals("*")) {
+                            project = ";";
+                        } else {
+                            project = "and project = '" + project + "';";
+                        }
+                    } else {
+                        priority = "and priority = '" + priority + "'";
+                        if (project.equals("*")) {
+                            project = ";";
+                        } else {
+                            project = "and project = '" + project + "';";
+                        }
+                    }
+                } else {
+                    status = "and status = '" + status + "'";
+                    if (priority.equals("*")) {
+                        priority = "";
+                        if (project.equals("*")) {
+                            project = ";";
+                        } else {
+                            project = "and project = '" + project + "';";
+                        }
+                    } else {
+                        priority = "and priority = '" + priority + "'";
+                        if (project.equals("*")) {
+                            project = ";";
+                        } else {
+                            project = "and project = '" + project + "';";
+                        }
+                    }
+                }
+            }
+
+
+            resultSet = statement.executeQuery("select * from task " + where + " " + assignee + " " + status + " " + priority + " " + project);
 
             while (resultSet.next()) {
                 if (resultSet.getString(1) != null) {
