@@ -25,6 +25,7 @@ public class EditRequestServlet extends HttpServlet {
         HttpSession session=request.getSession(false);
         if (session == null) {
             response.sendRedirect("/");
+            return;
         }
 
         String username = session != null ? session.getAttribute("username").toString() : null;
@@ -101,6 +102,7 @@ public class EditRequestServlet extends HttpServlet {
         if (session == null) {
             response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
             response.sendRedirect("/");
+            return;
         }
 
         task.put("task_id", request.getParameter("task_id"));

@@ -27,6 +27,7 @@ public class EditNewRequestServlet extends HttpServlet {
         if (session == null) {
             response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
             response.sendRedirect("/");
+            return;
         }
 
         response.setContentType("text/html;charset=utf-8");
@@ -84,6 +85,7 @@ public class EditNewRequestServlet extends HttpServlet {
         if (session == null) {
             response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
             response.sendRedirect("/");
+            return;
         }
 
         Map<String, Object> task = new HashMap<>();

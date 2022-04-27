@@ -63,6 +63,7 @@ public class MainRequestServlet extends HttpServlet {
         } else {
             response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
             response.sendRedirect("/");
+            return;
         }
         response.setStatus(HttpServletResponse.SC_OK);
 
@@ -77,6 +78,7 @@ public class MainRequestServlet extends HttpServlet {
         if (session == null) {
             response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
             response.sendRedirect("/");
+            return;
         }
 
         response.setContentType("text/html;charset=utf-8");
