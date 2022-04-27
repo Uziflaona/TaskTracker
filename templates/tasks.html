@@ -50,31 +50,23 @@ header, footer, article, nav, aside {
     <form action="/tasks" method="POST">
     <p>Назначено на:</p>
     <select name="Assignee">
-      <option>*</option>
       ${Assignee}
     </select>
     <p>Статус:</p>
     <select name="Status">
-      <option>*</option>
-      <option>Backlog</option>
-      <option>Develop</option>
-      <option>Done</option>
-      <option>Obsolete</option>
+      ${Status}
     </select>
     <p>Приоритет:</p>
     <select name="Priority">
-      <option>*</option>
-      <option>Low</option>
-      <option>Mid</option>
-      <option>High</option>
+      ${Priority}
     </select>
     <p>Проект:</p>
     <select name="Project">
-      <option>*</option>
       ${Project}
     </select>
       <input type="submit" value="Ok">
     </form>
+    <form action="/newTask" method="GET"> <input type="submit" value="new Task"> </form>
   </nav>
   <!--<aside>Aside</aside> -->
   </div>

@@ -62,21 +62,23 @@ header, footer, article, nav, aside {
         <form action="/task" method="POST">
             <table border="1" >
                 <tr>
-                    <td>Task_id: ${taskID}</td>
-                    <td colspan="3">Task: <input name="contact_person" value="${name}"></td>
-                    <td>Assignee: <select>${assignee}</select></td>
-                    <td>Priority: <select>${priority}</select></td>
+                    <td>Task_id: <input readonly name="task_id" value="${taskID}"></td>
+                    <td colspan="3">Task: <input name="name" value="${name}"></td>
+                    <td>Assignee: <select name="assignee">${assignee}</select></td>
+                    <td>Priority: <select name="priority">${priority}</select></td>
                 </tr>
                 <tr>
-                    <td>Status: <select>${status}</select></td>
-                    <td>Project: <input name="contact_person" value="${project}"></td>
+                    <td>Status: <select name="status">${status}</select></td>
+                    <td>Project: <input name="project" value="${project}"></td>
                     <td>Contact person: <input name="contact_person" value="${contact_person}"></td>
-                    <td>Contact: <input name="contact_person" value="${contact}"></td>
-                    <td>Creator: ${creator}</td>
-                    <td>Creation time: ${create_time}</td>
+                    <td>Contact: <input name="contact" value="${contact}"></td>
+                    <td>Creator: <input readonly name="creator" value="${creator}"></td>
+                    <td>Creation time: <input readonly name="create_time" value="${create_time}"></td>
                 </tr>
                 <tr style="height:60%">
-                    <td colspan="6" contenteditable>Description: <textarea type="text" name="description" id="des">${description}</textarea></td>
+                    <td colspan="6" contenteditable>Description:
+                        <textarea type="text" name="description" id="des">${description}</textarea>
+                    </td>
                 </tr>
             </table>
             <input type="submit" value="Ok">
@@ -90,16 +92,11 @@ header, footer, article, nav, aside {
             </select>
             <p>Статус:</p>
             <select name="Status">
-                <option>Backlog</option>
-                <option>Develop</option>
-                <option>Done</option>
-                <option>Obsolete</option>
+                ${Status}
             </select>
             <p>Приоритет:</p>
             <select name="Priority">
-                <option>Low</option>
-                <option>Mid</option>
-                <option>High</option>
+                ${Priority}
             </select>
             <p>Проект:</p>
             <select name="Project">
@@ -107,6 +104,7 @@ header, footer, article, nav, aside {
             </select>
             <input type="submit" value="Ok">
         </form>
+        <form action="/task" method="GET"> <input type="submit" value="new Task"> </form>
     </nav>
     <!--<aside>Aside</aside> -->
 </div>

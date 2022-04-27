@@ -18,8 +18,8 @@ public class MySql {
     private static Statement statement;
     private static ResultSet resultSet;
 
-    public static String getFilters (String fieldName) {
-        String fieldValues = new String();
+    public static ArrayList<String> getFilters (String fieldName) {
+        ArrayList<String> fieldValues = new ArrayList<>();
         try {
             connection = DriverManager.getConnection(url, user, password);
 
@@ -28,44 +28,8 @@ public class MySql {
             resultSet = statement.executeQuery("select DISTINCT " + fieldName + " from task;");
 
             while (resultSet.next()) {
-            fieldValues += ("<option>" + resultSet.getString(1) + "</option>");
+            fieldValues.add(resultSet.getString(1));
 
-            }
-        } catch (SQLException sqlEx) {
-            sqlEx.printStackTrace();
-        }finally {
-            //close connection ,stmt and resultset here
-            try { connection.close(); } catch(SQLException se) { }
-            try { statement.close(); } catch(SQLException se) { }
-            try { resultSet.close(); } catch(SQLException se) { }
-        }
-        return fieldValues;
-    }
-
-    public static String getAllTasks() {
-        String fieldValues = new String();
-        try {
-            connection = DriverManager.getConnection(url, user, password);
-
-            statement = connection.createStatement();
-
-            resultSet = statement.executeQuery("select * from task;");
-
-            while (resultSet.next()) {
-                fieldValues += ("<li>\n" +
-                        "      <table border=\"1\">\n" +
-                        "        <tr>\n" +
-                        "          <td colspan=\"4\"> <a href=\"task?taskID=" + resultSet.getString(1) +
-                        "\">" + resultSet.getString(2) + "</a></td>\n" +
-                        "          <td>" + resultSet.getString(4) + "</td>\n" +
-                        "        </tr>\n" +
-                        "        <tr>\n" +
-                        "          <td>Priority: " + resultSet.getString(5) + "</td>\n" +
-                        "          <td>Project: " + resultSet.getString(6) + "</td>\n" +
-                        "          <td colspan=\"3\">" + resultSet.getString(9) + "</td>\n" +
-                        "        </tr>\n" +
-                        "      </table>\n" +
-                        "    </li>");
             }
         } catch (SQLException sqlEx) {
             sqlEx.printStackTrace();
@@ -128,7 +92,7 @@ public class MySql {
             } else {
                 assignee = "assignee = '" + assignee + "'";
                 if (status.equals("*")) {
-                    status = "*";
+                    status = "";
                     if (priority.equals("*")) {
                         priority = "";
                         if (project.equals("*")) {
@@ -165,7 +129,8 @@ public class MySql {
             }
 
 
-            resultSet = statement.executeQuery("select * from task " + where + " " + assignee + " " + status + " " + priority + " " + project);
+            resultSet = statement.executeQuery("select * from task " + where + " " + assignee + " " + status + " "
+                    + priority + " " + project);
 
             while (resultSet.next()) {
                 if (resultSet.getString(1) != null) {
@@ -178,6 +143,7 @@ public class MySql {
                             "        </tr>\n" +
                             "        <tr>\n" +
                             "          <td>Priority: " + resultSet.getString(5) + "</td>\n" +
+                            "           <td>Status: " + resultSet.getString(3) + "</td>\n" +
                             "          <td>Project: " + resultSet.getString(6) + "</td>\n" +
                             "          <td colspan=\"3\">" + resultSet.getString(9) + "</td>\n" +
                             "        </tr>\n" +
@@ -207,7 +173,8 @@ public class MySql {
 
             statement = connection.createStatement();
 
-            resultSet = statement.executeQuery("select login, password from users where login = '" + username + "';");
+            resultSet = statement.executeQuery("select login, password from users where login = '" + username +
+                    "';");
 
             if(resultSet.next()) {
                 if(pwd.equals(resultSet.getString(2))) {
@@ -299,11 +266,12 @@ public class MySql {
 
             statement = connection.createStatement();
 
-            resultSet = statement.executeQuery("select name from users where login = " + username + ";");
-            resultSet.next();
+            resultSet = statement.executeQuery("select name from users where login = \"" + username + "\";");
 
-            name = resultSet.getString(1);
+            if(resultSet.next()) {
 
+                name = resultSet.getString(1);
+            }
         } catch (SQLException sqlEx) {
             sqlEx.printStackTrace();
         }finally {
@@ -314,4 +282,104 @@ public class MySql {
         }
         return name;
     }
+
+    public static void updateTask (Map<String, Object> task) {
+        try {
+            connection = DriverManager.getConnection(url, user, password);
+
+            statement = connection.createStatement();
+
+            statement.executeUpdate("update task " +
+                    "set name = '" + task.get("name") + "', " +
+                    "status = '" + task.get("status") + "', " +
+                    "assignee = '" + task.get("assignee") + "', " +
+                    "priority = '" + task.get("priority") + "', " +
+                    "project = '" + task.get("project") + "', " +
+                    "contact_person = '" + task.get("contact_person") + "', " +
+                    "contact = '" + task.get("contact") + "', " +
+                    "descrition = '" + task.get("description") + "'" +
+                    " where task_id = '" + task.get("task_id") + "';");
+
+        } catch (SQLException sqlEx) {
+            sqlEx.printStackTrace();
+        }finally {
+            //close connection ,stmt and resultset here
+            try { connection.close(); } catch(SQLException se) { }
+            try { statement.close(); } catch(SQLException se) { }
+            try { resultSet.close(); } catch(SQLException se) { }
+        }
+    }
+
+    public void createNewTask(Map<String, Object> task) {
+        try {
+            connection = DriverManager.getConnection(url, user, password);
+
+            statement = connection.createStatement();
+
+            System.out.println("insert into task (name, status, assignee, priority, project, contact_person, " +
+                    "contact, create_date, creator, descrition) values (" +
+                    "'" + task.get("name") + "', " +
+                    "'" + task.get("status") + "', " +
+                    "'" + task.get("assignee") + "', " +
+                    "'" + task.get("priority") + "', " +
+                    "'" + task.get("project") + "', " +
+                    "'" + task.get("contact_person") + "', " +
+                    "'" + task.get("contact") + "', " +
+                    "NOW(), " +
+                    "'" + task.get("creator") + "', " +
+                    "'" + task.get("description") + "');");
+
+            statement.executeUpdate("insert into task (name, status, assignee, priority, project, contact_person, " +
+                    "contact, create_date, creator, descrition) values (" +
+                    "'" + task.get("name") + "', " +
+                    "'" + task.get("status") + "', " +
+                    "'" + task.get("assignee") + "', " +
+                    "'" + task.get("priority") + "', " +
+                    "'" + task.get("project") + "', " +
+                    "'" + task.get("contact_person") + "', " +
+                    "'" + task.get("contact") + "', " +
+                    "NOW(), " +
+                    "'" + task.get("creator") + "', " +
+                    "'" + task.get("description") + "');");
+
+        } catch (SQLException sqlEx) {
+            sqlEx.printStackTrace();
+        }finally {
+            //close connection ,stmt and resultset here
+            try { connection.close(); } catch(SQLException se) { }
+            try { statement.close(); } catch(SQLException se) { }
+            try { resultSet.close(); } catch(SQLException se) { }
+        }
+    }
+
+    public String getLastTaskId() {
+
+        String taskId = "";
+
+        try {
+            connection = DriverManager.getConnection(url, user, password);
+
+            statement = connection.createStatement();
+
+            resultSet = statement.executeQuery("Select task_id from task " +
+                                                    "order by task_id desc " +
+                                                    "limit 1;");
+
+
+
+            if (resultSet.next()) {
+                taskId = resultSet.getString(1);
+            }
+
+        } catch (SQLException sqlEx) {
+            sqlEx.printStackTrace();
+        }finally {
+            //close connection ,stmt and resultset here
+            try { connection.close(); } catch(SQLException se) { }
+            try { statement.close(); } catch(SQLException se) { }
+            try { resultSet.close(); } catch(SQLException se) { }
+        }
+        return taskId;
+    }
+
 }
