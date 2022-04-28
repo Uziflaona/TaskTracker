@@ -13,7 +13,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
-public class EditNewRequestServlet extends HttpServlet {
+public class EditNewTaskServlet extends HttpServlet {
 
     MySql mySql = new MySql();
 
@@ -72,6 +72,12 @@ public class EditNewRequestServlet extends HttpServlet {
         pageVariables.put("creator", "");
         pageVariables.put("create_time", "");
         pageVariables.put("description", "");
+
+        if (mySql.getUserClass(session.getAttribute("username").toString()).equals("admin")) {
+            pageVariables.put("admin", "<a align=\"right\" href=\"\\editUsers\">Users</a>");
+        } else {
+            pageVariables.put("admin", "");
+        }
 
         response.setStatus(HttpServletResponse.SC_OK);
 

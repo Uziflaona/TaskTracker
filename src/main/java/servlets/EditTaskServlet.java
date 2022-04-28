@@ -13,7 +13,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
-public class EditRequestServlet extends HttpServlet {
+public class EditTaskServlet extends HttpServlet {
     public void doGet(HttpServletRequest request,
                       HttpServletResponse response) throws
             ServletException, IOException {
@@ -59,6 +59,12 @@ public class EditRequestServlet extends HttpServlet {
         pageVariables.put("Status", getOptionsHTML(statusList));
         pageVariables.put("Priority", getOptionsHTML(priorityList));
 
+        if (mySql.getUserClass(session.getAttribute("username").toString()) == "admin") {
+            pageVariables.put("admin", "<a href=\"\\editUsers\">Users</a>");
+        } else {
+            pageVariables.put("admin", "");
+        }
+
         if (request.getParameter("taskID") == null || request.getParameter("taskID") == "") {
 //            response.getWriter().println(PageGenerator.instance().getPage("newTask.html", pageVariables));
         } else {
@@ -84,11 +90,20 @@ public class EditRequestServlet extends HttpServlet {
             pageVariables.put("create_time", task.get("create_date"));
             pageVariables.put("description", task.get("description"));
 
+            if (mySql.getUserClass(session.getAttribute("username").toString()).equals("admin")) {
+                pageVariables.put("admin", "<a align=\"right\" href=\"\\editUsers\">Users</a>");
+            } else {
+                pageVariables.put("admin", "");
+            }
+
 
             pageVariables.put("taskID", request.getParameter("taskID"));
 
-            response.getWriter().println(PageGenerator.instance().getPage("task.html", pageVariables));
-
+            if (mySql.getUserClass(username) == "limited") {
+                response.getWriter().println(PageGenerator.instance().getPage("taskLimited.html", pageVariables));
+            }else {
+                response.getWriter().println(PageGenerator.instance().getPage("task.html", pageVariables));
+            }
         }
         response.setStatus(HttpServletResponse.SC_OK);
     }
@@ -118,6 +133,7 @@ public class EditRequestServlet extends HttpServlet {
         MySql mySql = new MySql();
 
         mySql.updateTask(task);
+
 
         response.sendRedirect("/task?taskID=" + task.get("task_id"));
     }

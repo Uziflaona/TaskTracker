@@ -75,56 +75,31 @@ public class MySql {
                     status = "status = '" + status + "'";
                     if (priority.equals("*")) {
                         priority = "";
-                        if (project.equals("*")) {
-                            project = ";";
-                        } else {
-                            project = "and project = '" + project + "';";
-                        }
                     } else {
                         priority = "and priority = '" + priority + "'";
-                        if (project.equals("*")) {
-                            project = ";";
-                        } else {
-                            project = "and project = '" + project + "';";
-                        }
+                    }
+                    if (project.equals("*")) {
+                        project = ";";
+                    } else {
+                        project = "and project = '" + project + "';";
                     }
                 }
             } else {
                 assignee = "assignee = '" + assignee + "'";
                 if (status.equals("*")) {
                     status = "";
-                    if (priority.equals("*")) {
-                        priority = "";
-                        if (project.equals("*")) {
-                            project = ";";
-                        } else {
-                            project = "and project = '" + project + "';";
-                        }
-                    } else {
-                        priority = "and priority = '" + priority + "'";
-                        if (project.equals("*")) {
-                            project = ";";
-                        } else {
-                            project = "and project = '" + project + "';";
-                        }
-                    }
                 } else {
                     status = "and status = '" + status + "'";
-                    if (priority.equals("*")) {
-                        priority = "";
-                        if (project.equals("*")) {
-                            project = ";";
-                        } else {
-                            project = "and project = '" + project + "';";
-                        }
-                    } else {
-                        priority = "and priority = '" + priority + "'";
-                        if (project.equals("*")) {
-                            project = ";";
-                        } else {
-                            project = "and project = '" + project + "';";
-                        }
-                    }
+                }
+                if (priority.equals("*")) {
+                    priority = "";
+                } else {
+                    priority = "and priority = '" + priority + "'";
+                }
+                if (project.equals("*")) {
+                    project = ";";
+                } else {
+                    project = "and project = '" + project + "';";
                 }
             }
 
@@ -297,7 +272,7 @@ public class MySql {
                     "project = '" + task.get("project") + "', " +
                     "contact_person = '" + task.get("contact_person") + "', " +
                     "contact = '" + task.get("contact") + "', " +
-                    "descrition = '" + task.get("description") + "'" +
+                    "description = '" + task.get("description") + "'" +
                     " where task_id = '" + task.get("task_id") + "';");
 
         } catch (SQLException sqlEx) {
@@ -317,7 +292,7 @@ public class MySql {
             statement = connection.createStatement();
 
             System.out.println("insert into task (name, status, assignee, priority, project, contact_person, " +
-                    "contact, create_date, creator, descrition) values (" +
+                    "contact, create_date, creator, p) values (" +
                     "'" + task.get("name") + "', " +
                     "'" + task.get("status") + "', " +
                     "'" + task.get("assignee") + "', " +
@@ -330,7 +305,7 @@ public class MySql {
                     "'" + task.get("description") + "');");
 
             statement.executeUpdate("insert into task (name, status, assignee, priority, project, contact_person, " +
-                    "contact, create_date, creator, descrition) values (" +
+                    "contact, create_date, creator, description) values (" +
                     "'" + task.get("name") + "', " +
                     "'" + task.get("status") + "', " +
                     "'" + task.get("assignee") + "', " +
@@ -380,6 +355,32 @@ public class MySql {
             try { resultSet.close(); } catch(SQLException se) { }
         }
         return taskId;
+    }
+
+    public String getUserClass(String login) {
+
+        String userClass = new String("");
+
+        try {
+            connection = DriverManager.getConnection(url, user, password);
+
+            statement = connection.createStatement();
+
+            resultSet = statement.executeQuery("Select class from users " + "where login = '" + login + "';");
+
+            if (resultSet.next()) {
+                userClass = resultSet.getString(1);
+            }
+
+        } catch (SQLException sqlEx) {
+            sqlEx.printStackTrace();
+        }finally {
+            //close connection ,stmt and resultset here
+            try { connection.close(); } catch(SQLException se) { }
+            try { statement.close(); } catch(SQLException se) { }
+            try { resultSet.close(); } catch(SQLException se) { }
+        }
+        return userClass;
     }
 
 }

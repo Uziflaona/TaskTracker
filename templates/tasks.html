@@ -41,7 +41,12 @@ header, footer, article, nav, aside {
 }
 </style>
 <body>
-<header>${username}</header>
+<header>
+  <table>
+    <td align="left">${username}</td>
+    <td align="right">${admin}</td>
+  </table>
+</header>
 <div id="main">
   <article>
     ${Tasks}

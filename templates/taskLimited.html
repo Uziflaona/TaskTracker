@@ -1,5 +1,9 @@
-<!doctype html>
-<title>Task</title>
+<!DOCTYPE html>
+
+<head>
+    <meta charset="UTF-8">
+    <title>task</title>
+</head>
 <style>
 * {
   box-sizing: border-box;
@@ -12,6 +16,10 @@ body {
   margin: 0;
 }
 
+table {
+  width: 100%;
+  min-height: 50vh;
+}
 
 div {
   border: thin solid black;
@@ -52,38 +60,30 @@ header, footer, article, nav, aside {
 }
 </style>
 <body>
-<header>
-  <table width="100%">
-    <td align="left">${username}</td>
-    <td align="right">${admin}</td>
-  </table>
-</header>
+<header>${username}</header>
 <div id="main">
   <article>
-    <form action="/newTask" method="POST">
       <table border="1" >
         <tr>
           <td>Task_id: <input readonly name="task_id" value="${taskID}"></td>
-          <td colspan="3">Task: <input name="name" value="${name}"></td>
-          <td>Assignee: <select name="assignee">${assignee}</select></td>
-          <td>Priority: <select name="priority">${priority}</select></td>
+          <td colspan="3">Task: <input readonly name="name" value="${name}"></td>
+          <td>Assignee: <select contenteditable="false" name="assignee">${assignee}</select></td>
+          <td>Priority: <select contenteditable="false" name="priority">${priority}</select></td>
         </tr>
         <tr>
-          <td>Status: <select name="status">${status}</select></td>
-          <td>Project: <input name="project" value="${project}"></td>
-          <td>Contact person: <input name="contact_person" value="${contact_person}"></td>
-          <td>Contact: <input name="contact" value="${contact}"></td>
+          <td>Status: <select contenteditable="false" name="status">${status}</select></td>
+          <td>Project: <input readonly name="project" value="${project}"></td>
+          <td>Contact person: <input readonly name="contact_person" value="${contact_person}"></td>
+          <td>Contact: <input readonly name="contact" value="${contact}"></td>
           <td>Creator: <input readonly name="creator" value="${creator}"></td>
           <td>Creation time: <input readonly name="create_time" value="${create_time}"></td>
         </tr>
         <tr style="height:60%">
           <td colspan="6" contenteditable>Description:
-            <textarea type="text" name="description" id="des">${description}</textarea>
+            <textarea readonly type="text" name="description" id="des">${description}</textarea>
           </td>
         </tr>
       </table>
-      <input type="submit" value="Ok">
-    </form>
   </article>
   <nav>
     <form action="/tasks" method="POST">

@@ -12,10 +12,7 @@ body {
   margin: 0;
 }
 
-table {
-  width: 100%;
-  min-height: 50vh;
-}
+
 
 div {
   border: thin solid black;
@@ -56,7 +53,12 @@ header, footer, article, nav, aside {
 }
 </style>
 <body>
-<header>${username}</header>
+<header>
+    <table width="100%">
+        <td align="left">${username}</td>
+        <td align="right">${admin}</td>
+    </table>
+</header>
 <div id="main">
     <article>
         <form action="/task" method="POST">
