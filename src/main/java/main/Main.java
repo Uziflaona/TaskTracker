@@ -4,15 +4,21 @@ import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.servlet.ServletContextHandler;
 import org.eclipse.jetty.servlet.ServletHolder;
 import servlets.*;
-import templater.*;
 
 public class Main {
     public static void main (String[] args) throws Exception {
         MainRequestServlet mainRequestServlet = new MainRequestServlet();
         LoginRequestServlet loginRequestServlet = new LoginRequestServlet();
+        EditTaskServlet editTaskServlet = new EditTaskServlet();
+        EditNewTaskServlet editNewTaskServlet = new EditNewTaskServlet();
+        EditUsersServlet editUsersServlet = new EditUsersServlet();
 
         ServletContextHandler context = new ServletContextHandler(ServletContextHandler.SESSIONS);
         context.addServlet(new ServletHolder(loginRequestServlet), "/*");
+        context.addServlet(new ServletHolder(mainRequestServlet), "/tasks");
+        context.addServlet(new ServletHolder(editTaskServlet), "/task");
+        context.addServlet(new ServletHolder(editNewTaskServlet), "/newTask");
+        context.addServlet(new ServletHolder(editUsersServlet), "/editUsers");
 
         Server server = new Server(8080);
         server.setHandler(context);

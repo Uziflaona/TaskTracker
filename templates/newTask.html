@@ -1,0 +1,113 @@
+<!doctype html>
+<title>Task</title>
+<style>
+* {
+  box-sizing: border-box;
+}
+
+body {
+  display: flex;
+  min-height: 100vh;
+  flex-direction: column;
+  margin: 0;
+}
+
+
+div {
+  border: thin solid black;
+
+      display:block;
+      overflow: hidden;
+}
+
+#des {
+  height: 30vh;
+  width: 100%;
+  font-size:24px;
+}
+
+#main {
+  display: flex;
+  flex: 1;
+}
+#main > article {
+
+
+  flex: 1;
+}
+#main > nav,
+#main > aside {
+  flex: 0 0 20vw;
+  background: beige;
+}
+#main > nav {
+  order: -1;
+}
+header, footer {
+  background: yellowgreen;
+  height: 5vh;
+}
+header, footer, article, nav, aside {
+  padding: 1em;
+}
+</style>
+<body>
+<header>
+  <table width="100%">
+    <td align="left">${username}</td>
+    <td align="right">${admin}</td>
+  </table>
+</header>
+<div id="main">
+  <article>
+    <form action="/newTask" method="POST">
+      <table border="1" >
+        <tr>
+          <td>Task_id: <input readonly name="task_id" value="${taskID}"></td>
+          <td colspan="3">Task: <input name="name" value="${name}"></td>
+          <td>Assignee: <select name="assignee">${assignee}</select></td>
+          <td>Priority: <select name="priority">${priority}</select></td>
+        </tr>
+        <tr>
+          <td>Status: <select name="status">${status}</select></td>
+          <td>Project: <input name="project" value="${project}"></td>
+          <td>Contact person: <input name="contact_person" value="${contact_person}"></td>
+          <td>Contact: <input name="contact" value="${contact}"></td>
+          <td>Creator: <input readonly name="creator" value="${creator}"></td>
+          <td>Creation time: <input readonly name="create_time" value="${create_time}"></td>
+        </tr>
+        <tr style="height:60%">
+          <td colspan="6" contenteditable>Description:
+            <textarea type="text" name="description" id="des">${description}</textarea>
+          </td>
+        </tr>
+      </table>
+      <input type="submit" value="Ok">
+    </form>
+  </article>
+  <nav>
+    <form action="/tasks" method="POST">
+      <p>Назначено на:</p>
+      <select name="Assignee">
+        ${Assignee}
+      </select>
+      <p>Статус:</p>
+      <select name="Status">
+        ${Status}
+      </select>
+      <p>Приоритет:</p>
+      <select name="Priority">
+        ${Priority}
+      </select>
+      <p>Проект:</p>
+      <select name="Project">
+        ${Project}
+      </select>
+      <input type="submit" value="Ok">
+    </form>
+    <form action="/task" method="GET"> <input type="submit" value="new Task"> </form>
+  </nav>
+  <!--<aside>Aside</aside> -->
+</div>
+<footer>Footer</footer>
+</body>

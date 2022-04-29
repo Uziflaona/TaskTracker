@@ -1,5 +1,5 @@
 <!doctype html>
-<title>Example</title>
+<title>Tasks</title>
 <style>
 * {
   box-sizing: border-box;
@@ -41,13 +41,18 @@ header, footer, article, nav, aside {
 }
 </style>
 <body>
-<header>Header</header>
+<header>
+  <table>
+    <td align="left">${username}</td>
+    <td align="right">${admin}</td>
+  </table>
+</header>
 <div id="main">
   <article>
     ${Tasks}
   </article>
   <nav>
-    <form action="/tasks.html" method="POST">
+    <form action="/tasks" method="POST">
     <p>Назначено на:</p>
     <select name="Assignee">
       ${Assignee}
@@ -66,6 +71,7 @@ header, footer, article, nav, aside {
     </select>
       <input type="submit" value="Ok">
     </form>
+    <form action="/newTask" method="GET"> <input type="submit" value="new Task"> </form>
   </nav>
   <!--<aside>Aside</aside> -->
   </div>

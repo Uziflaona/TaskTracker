@@ -7,6 +7,7 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 import java.io.IOException;
 
 import java.util.ArrayList;
@@ -20,18 +21,55 @@ public class MainRequestServlet extends HttpServlet {
     public void doGet(HttpServletRequest request,
                       HttpServletResponse response) throws
             ServletException, IOException {
-        Map<String, Object> pageVariables = createPageVariablesMap(request);
-//        pageVariables.put("message", "");
-        pageVariables.put("Assignee", mySql.getFilters("Assignee"));
-        pageVariables.put("Status", mySql.getFilters("status"));
-        pageVariables.put("Priority", mySql.getFilters("priority"));
-        pageVariables.put("Project", mySql.getFilters("project"));
+        Map<String, Object> pageVariables = new HashMap<>();
 
-        pageVariables.put("Tasks", mySql.getTasks());
+        HttpSession session=request.getSession(false);
+        if (session!=null) {
 
-        response.setContentType("text/html;charset=utf-8");
 
-        response.getWriter().println(PageGenerator.instance().getPage("tasks.html", pageVariables));
+            ArrayList <String> usersNamesList = mySql.getFilters("assignee");
+            ArrayList <String> statusList = new ArrayList<>();
+            ArrayList <String> projectList = mySql.getFilters("project");
+            ArrayList <String> priorityList = new ArrayList<>();
+
+            usersNamesList.add(0, "*");
+
+            projectList.add(0, "*");
+
+            priorityList.add("*");
+            priorityList.add("low");
+            priorityList.add("mid");
+            priorityList.add("high");
+
+            statusList.add("*");
+            statusList.add("Backlog");
+            statusList.add("Develop");
+            statusList.add("Done");
+            statusList.add("Obsolete");
+
+            pageVariables.put("username", session.getAttribute("username"));
+            pageVariables.put("Assignee", getOptionsHTML(usersNamesList));
+            pageVariables.put("Project", getOptionsHTML(projectList));
+
+            pageVariables.put("Tasks", mySql.getTasks("*", "*", "*", "*"));
+
+            pageVariables.put("Status", getOptionsHTML(statusList));
+            pageVariables.put("Priority", getOptionsHTML(priorityList));
+
+            if (mySql.getUserClass(session.getAttribute("username").toString()).equals("admin")) {
+                pageVariables.put("admin", "<a align=\"right\" href=\"\\editUsers\">Users</a>");
+            } else {
+                pageVariables.put("admin", "");
+            }
+
+            response.setContentType("text/html;charset=utf-8");
+
+            response.getWriter().println(PageGenerator.instance().getPage("tasks.html", pageVariables));
+        } else {
+            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+            response.sendRedirect("/");
+            return;
+        }
         response.setStatus(HttpServletResponse.SC_OK);
 
     }
@@ -39,7 +77,14 @@ public class MainRequestServlet extends HttpServlet {
     public void doPost(HttpServletRequest request,
                        HttpServletResponse response) throws
             ServletException, IOException {
-        Map<String, Object> pageVariables = createPageVariablesMap(request);
+        Map<String, Object> pageVariables = new HashMap<>();
+
+        HttpSession session=request.getSession(false);
+        if (session == null) {
+            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+            response.sendRedirect("/");
+            return;
+        }
 
         response.setContentType("text/html;charset=utf-8");
 
@@ -47,6 +92,32 @@ public class MainRequestServlet extends HttpServlet {
         String status = request.getParameter("Status");
         String priority = request.getParameter("Priority");
         String project = request.getParameter("Project");
+
+        ArrayList <String> usersNamesList = mySql.getFilters("assignee");
+        ArrayList <String> statusList = new ArrayList<>();
+        ArrayList <String> projectList = mySql.getFilters("project");
+        ArrayList <String> priorityList = new ArrayList<>();
+
+        usersNamesList.add(0, "*");
+
+        projectList.add(0, "*");
+
+        priorityList.add("*");
+        priorityList.add("low");
+        priorityList.add("mid");
+        priorityList.add("high");
+
+        statusList.add("*");
+        statusList.add("Backlog");
+        statusList.add("Develop");
+        statusList.add("Done");
+        statusList.add("Obsolete");
+
+
+        usersNamesList = setFirst(assignee, usersNamesList);
+        statusList = setFirst(status, statusList);
+        projectList = setFirst(project, projectList);
+        priorityList = setFirst(priority, priorityList);
 
         if (assignee == null || assignee.isEmpty()) {
             response.setStatus(HttpServletResponse.SC_FORBIDDEN);
@@ -57,18 +128,43 @@ public class MainRequestServlet extends HttpServlet {
 //        pageVariables.put("status", assignee == null ? "" : status);
 //        pageVariables.put("priority", assignee == null ? "" : priority);
 //        pageVariables.put("project", assignee == null ? "" : project);
+        pageVariables.put("username", session.getAttribute("username"));
+        pageVariables.put("Assignee", getOptionsHTML(usersNamesList));
+        pageVariables.put("Project", getOptionsHTML(projectList));
+        pageVariables.put("Tasks", mySql.getTasks(assignee, status, priority, project));
+        pageVariables.put("Status", getOptionsHTML(statusList));
+        pageVariables.put("Priority", getOptionsHTML(priorityList));
 
-//        response.getWriter().println(PageGenerator.instance().getPage("page.html", pageVariables));
+        if (mySql.getUserClass(session.getAttribute("username").toString()).equals("admin")) {
+            pageVariables.put("admin", "<a align=\"right\" href=\"\\editUsers\">Users</a>");
+        } else {
+            pageVariables.put("admin", "");
+        }
+
+        response.getWriter().println(PageGenerator.instance().getPage("tasks.html", pageVariables));
     }
 
-    private static Map<String, Object> createPageVariablesMap(HttpServletRequest request) {
-        Map<String, Object> pageVariables = new HashMap<>();
-//        pageVariables.put("method", request.getMethod());
-//        pageVariables.put("URL", request.getRequestURL().toString());
-//        pageVariables.put("pathInfo", request.getPathInfo());
-//        pageVariables.put("sessionId", request.getSession().getId());
-//        pageVariables.put("parameters", request.getParameterMap().toString());
-        return pageVariables;
+
+
+    private static ArrayList<String> setFirst (String element, ArrayList<String> arrayList) {
+        int indexOfElement = arrayList.indexOf(element);
+
+        if (indexOfElement > 0) {
+            arrayList.set(indexOfElement, arrayList.get(0));
+            arrayList.set(0, element);
+        }
+
+        return arrayList;
+    }
+
+    private static String getOptionsHTML (ArrayList<String> arrayList) {
+        String options = new String();
+
+        for (int i = 0; i < arrayList.size(); i++) {
+            options += "<option>" + arrayList.get(i) + "</option>";
+        }
+
+        return options;
     }
 
 }

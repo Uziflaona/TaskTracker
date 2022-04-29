@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<head>
+    <meta charset="UTF-8">
+    <title>task</title>
+</head>
+<style>
+* {
+  box-sizing: border-box;
+}
+
+body {
+  display: flex;
+  min-height: 100vh;
+  flex-direction: column;
+  margin: 0;
+}
+
+table {
+  width: 100%;
+  min-height: 50vh;
+}
+
+div {
+  border: thin solid black;
+
+      display:block;
+      overflow: hidden;
+}
+
+#des {
+  height: 30vh;
+  width: 100%;
+  font-size:24px;
+}
+
+#main {
+  display: flex;
+  flex: 1;
+}
+#main > article {
+
+
+  flex: 1;
+}
+#main > nav,
+#main > aside {
+  flex: 0 0 20vw;
+  background: beige;
+}
+#main > nav {
+  order: -1;
+}
+header, footer {
+  background: yellowgreen;
+  height: 5vh;
+}
+header, footer, article, nav, aside {
+  padding: 1em;
+}
+</style>
+<body>
+<table>
+    <td align="left">${username}</td>
+    <td align="right">${admin}</td>
+</table>
+<div id="main">
+    <article>
+
+    </article>
+    <nav>
+        <form action="/tasks" method="POST">
+            <p>Назначено на:</p>
+            <select name="Assignee">
+                ${Assignee}
+            </select>
+            <p>Статус:</p>
+            <select name="Status">
+                ${Status}
+            </select>
+            <p>Приоритет:</p>
+            <select name="Priority">
+                ${Priority}
+            </select>
+            <p>Проект:</p>
+            <select name="Project">
+                ${Project}
+            </select>
+            <input type="submit" value="Ok">
+        </form>
+        <form action="/task" method="GET"> <input type="submit" value="new Task"> </form>
+    </nav>
+    <!--<aside>Aside</aside> -->
+</div>
+<footer>Footer</footer>
+</body>
