@@ -58,17 +58,17 @@ public class MySql {
                     if (priority.equals("*")) {
                         priority = "";
                         if (project.equals("*")) {
-                            project = ";";
+                            project = "";
                             where = "";
                         } else {
-                            project = "project = '" + project + "';";
+                            project = "project = '" + project + "'";
                         }
                     } else {
                         priority = "priority = '" + priority + "'";
                         if (project.equals("*")) {
-                            project = ";";
+                            project = "";
                         } else {
-                            project = " and project = '" + project + "';";
+                            project = " and project = '" + project + "'";
                         }
                     }
                 } else {
@@ -79,9 +79,9 @@ public class MySql {
                         priority = "and priority = '" + priority + "'";
                     }
                     if (project.equals("*")) {
-                        project = ";";
+                        project = "";
                     } else {
-                        project = "and project = '" + project + "';";
+                        project = "and project = '" + project + "'";
                     }
                 }
             } else {
@@ -97,15 +97,15 @@ public class MySql {
                     priority = "and priority = '" + priority + "'";
                 }
                 if (project.equals("*")) {
-                    project = ";";
+                    project = "";
                 } else {
-                    project = "and project = '" + project + "';";
+                    project = "and project = '" + project + "'";
                 }
             }
 
 
             resultSet = statement.executeQuery("select * from task " + where + " " + assignee + " " + status + " "
-                    + priority + " " + project);
+                    + priority + " " + project + "order by task_id desc;");
 
             while (resultSet.next()) {
                 if (resultSet.getString(1) != null) {
@@ -172,7 +172,7 @@ public class MySql {
         return status;
     }
 
-    public static ArrayList<String> getUsers() {
+    public static ArrayList<String> getUsersNames() {
 
         ArrayList<String> namesArrayList = new ArrayList<>();
 
@@ -291,19 +291,6 @@ public class MySql {
 
             statement = connection.createStatement();
 
-            System.out.println("insert into task (name, status, assignee, priority, project, contact_person, " +
-                    "contact, create_date, creator, p) values (" +
-                    "'" + task.get("name") + "', " +
-                    "'" + task.get("status") + "', " +
-                    "'" + task.get("assignee") + "', " +
-                    "'" + task.get("priority") + "', " +
-                    "'" + task.get("project") + "', " +
-                    "'" + task.get("contact_person") + "', " +
-                    "'" + task.get("contact") + "', " +
-                    "NOW(), " +
-                    "'" + task.get("creator") + "', " +
-                    "'" + task.get("description") + "');");
-
             statement.executeUpdate("insert into task (name, status, assignee, priority, project, contact_person, " +
                     "contact, create_date, creator, description) values (" +
                     "'" + task.get("name") + "', " +
@@ -383,4 +370,110 @@ public class MySql {
         return userClass;
     }
 
+    public String getUsers() {
+
+        String users = new String();
+
+        try {
+            connection = DriverManager.getConnection(url, user, password);
+
+            statement = connection.createStatement();
+
+            resultSet = statement.executeQuery("Select * from users");
+
+            while (resultSet.next()) {
+                ArrayList<String> classes = new ArrayList<>();
+                classes.add("admin");
+                classes.add("user");
+                classes.add("limited");
+
+                classes = setFirst(resultSet.getString(5), classes);
+
+                users += "<li><form action=\"/editUsers\" method=\"POST\"><table border=\"1\"><tr>" +
+                        "<td><input name=\"user_id\" readonly value=\"" + resultSet.getString(1) + "\"></td>" +
+                        "<td><input name=\"login\" value=\"" + resultSet.getString(2) + "\"></td>" +
+                        "<td><input name=\"password\" value=\"" + resultSet.getString(3) + "\"></td>" +
+                        "<td><input name=\"name\" value=\"" + resultSet.getString(4) + "\"></td>" +
+                        "<td><select name=\"class\">" + getOptionsHTML(classes) + "<select></td></tr></table>" +
+                        "<input name=\"action\" type=\"submit\" value=\"edit\"></form></li>";
+            }
+
+        } catch (SQLException sqlEx) {
+            sqlEx.printStackTrace();
+        }finally {
+            //close connection ,stmt and resultset here
+            try { connection.close(); } catch(SQLException se) { }
+            try { statement.close(); } catch(SQLException se) { }
+            try { resultSet.close(); } catch(SQLException se) { }
+        }
+        return users;
+    }
+
+    public void setUser(String user_id, String login, String pwd, String name, String role) {
+
+        String userClass = new String("");
+
+        try {
+            connection = DriverManager.getConnection(url, user, password);
+
+            statement = connection.createStatement();
+
+            statement.executeUpdate("Update users set login = '" + login + "', " +
+                    "password = '" + pwd + "', name = '" + name + "', class = '" + role + "'" +
+                    "where user_id = '" + user_id + "';");
+
+        } catch (SQLException sqlEx) {
+            sqlEx.printStackTrace();
+        }finally {
+            //close connection ,stmt and resultset here
+            try { connection.close(); } catch(SQLException se) { }
+            try { statement.close(); } catch(SQLException se) { }
+            try { resultSet.close(); } catch(SQLException se) { }
+        }
+        return;
+    }
+
+    public void addUser(String login, String pwd, String name, String role) {
+
+        String userClass = new String("");
+
+        try {
+            connection = DriverManager.getConnection(url, user, password);
+
+            statement = connection.createStatement();
+
+            statement.executeUpdate("insert into users (login, password, name, class) values ('" + login + "', '" +
+                    pwd + "', '" + name + "', '" + role + "');");
+
+        } catch (SQLException sqlEx) {
+            sqlEx.printStackTrace();
+        }finally {
+            //close connection ,stmt and resultset here
+            try { connection.close(); } catch(SQLException se) { }
+            try { statement.close(); } catch(SQLException se) { }
+            try { resultSet.close(); } catch(SQLException se) { }
+        }
+        return;
+    }
+
+    private static ArrayList<String> setFirst (String element, ArrayList<String> arrayList) {
+        int indexOfElement = arrayList.indexOf(element);
+
+        if (indexOfElement > 0) {
+            arrayList.set(indexOfElement, arrayList.get(0));
+            arrayList.set(0, element);
+        }
+
+        return arrayList;
+    }
+
+    private static String getOptionsHTML (ArrayList<String> arrayList) {
+        String options = new String();
+
+        for (int i = 0; i < arrayList.size(); i++) {
+            options += "<option>" + arrayList.get(i) + "</option>";
+        }
+
+        return options;
+    }
 }

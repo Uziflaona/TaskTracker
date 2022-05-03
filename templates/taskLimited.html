@@ -18,7 +18,6 @@ body {
 
 table {
   width: 100%;
-  min-height: 50vh;
 }
 
 div {
@@ -60,18 +59,23 @@ header, footer, article, nav, aside {
 }
 </style>
 <body>
-<header>${username}</header>
+<HEADER>
+  <table width="100%">
+      <td><a href="/logout">Logout</a> </td>
+      <td align="left">${username}</td>
+  </table>
+</HEADER>
 <div id="main">
   <article>
       <table border="1" >
         <tr>
           <td>Task_id: <input readonly name="task_id" value="${taskID}"></td>
           <td colspan="3">Task: <input readonly name="name" value="${name}"></td>
-          <td>Assignee: <select contenteditable="false" name="assignee">${assignee}</select></td>
-          <td>Priority: <select contenteditable="false" name="priority">${priority}</select></td>
+          <td>Assignee: <select contenteditable="false" disabled name="assignee">${assignee}</select></td>
+          <td>Priority: <select contenteditable="false" disabled name="priority">${priority}</select></td>
         </tr>
         <tr>
-          <td>Status: <select contenteditable="false" name="status">${status}</select></td>
+          <td>Status: <select disabled contenteditable="false" name="status">${status}</select></td>
           <td>Project: <input readonly name="project" value="${project}"></td>
           <td>Contact person: <input readonly name="contact_person" value="${contact_person}"></td>
           <td>Contact: <input readonly name="contact" value="${contact}"></td>
@@ -105,9 +109,8 @@ header, footer, article, nav, aside {
       </select>
       <input type="submit" value="Ok">
     </form>
-    <form action="/task" method="GET"> <input type="submit" value="new Task"> </form>
   </nav>
   <!--<aside>Aside</aside> -->
 </div>
-<footer>Footer</footer>
+<footer></footer>
 </body>

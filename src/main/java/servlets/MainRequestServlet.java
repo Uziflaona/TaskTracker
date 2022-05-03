@@ -62,6 +62,13 @@ public class MainRequestServlet extends HttpServlet {
                 pageVariables.put("admin", "");
             }
 
+            if (mySql.getUserClass(session.getAttribute("username").toString()).equals("limited")) {
+                pageVariables.put("newTask", "");
+            } else {
+                pageVariables.put("newTask", "<form action=\"/newTask\" method=\"GET\"> " +
+                        "<input type=\"submit\" value=\"new Task\"> </form>");
+            }
+
             response.setContentType("text/html;charset=utf-8");
 
             response.getWriter().println(PageGenerator.instance().getPage("tasks.html", pageVariables));
@@ -139,6 +146,13 @@ public class MainRequestServlet extends HttpServlet {
             pageVariables.put("admin", "<a align=\"right\" href=\"\\editUsers\">Users</a>");
         } else {
             pageVariables.put("admin", "");
+        }
+
+        if (mySql.getUserClass(session.getAttribute("username").toString()).equals("limited")) {
+            pageVariables.put("newTask", "");
+        } else {
+            pageVariables.put("newTask", "<form action=\"/newTask\" method=\"GET\"> " +
+                    "<input type=\"submit\" value=\"new Task\"> </form>");
         }
 
         response.getWriter().println(PageGenerator.instance().getPage("tasks.html", pageVariables));
