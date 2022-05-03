@@ -65,8 +65,6 @@ public class EditTaskServlet extends HttpServlet {
             pageVariables.put("admin", "");
         }
 
-        //        TODO remove "*" from select
-
         if (request.getParameter("taskID") == null || request.getParameter("taskID") == "") {
             response.sendRedirect("/newTask");
             return;
