@@ -6,7 +6,7 @@ import org.eclipse.jetty.servlet.ServletHolder;
 import servlets.*;
 
 public class Main {
-    public static void main (String[] args) throws Exception {
+    public static void main (String[] args) throws Exception { // Инициализация сервера
         MainRequestServlet mainRequestServlet = new MainRequestServlet();
         LoginRequestServlet loginRequestServlet = new LoginRequestServlet();
         EditTaskServlet editTaskServlet = new EditTaskServlet();

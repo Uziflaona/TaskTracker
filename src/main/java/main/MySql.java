@@ -18,7 +18,7 @@ public class MySql {
     private static Statement statement;
     private static ResultSet resultSet;
 
-    public static ArrayList<String> getFilters (String fieldName) {
+    public static ArrayList<String> getFilters (String fieldName) { // получение списка возможных опций из таблицы задач
         ArrayList<String> fieldValues = new ArrayList<>();
         try {
             connection = DriverManager.getConnection(url, user, password);
@@ -42,7 +42,8 @@ public class MySql {
         return fieldValues;
     }
 
-    public static String getTasks(String assignee, String status, String priority, String project) {
+    public static String getTasks(String assignee, String status, String priority, String project) { // задачи по
+                                                                                                    // фильтрам
         String fieldValues = new String("");
         try {
             connection = DriverManager.getConnection(url, user, password);
