@@ -34,7 +34,7 @@ public class EditTaskServlet extends HttpServlet {
 
         response.setContentType("text/html;charset=utf-8");
 
-        ArrayList <String> usersNamesList = mySql.getUsers();
+        ArrayList <String> usersNamesList = mySql.getUsersNames();
         ArrayList <String> statusList = new ArrayList<>();
         ArrayList <String> projectList = mySql.getFilters("project");
         ArrayList <String> priorityList = new ArrayList<>();
@@ -66,45 +66,60 @@ public class EditTaskServlet extends HttpServlet {
         }
 
         if (request.getParameter("taskID") == null || request.getParameter("taskID") == "") {
-//            response.getWriter().println(PageGenerator.instance().getPage("newTask.html", pageVariables));
-        } else {
-            String taskID = request.getParameter("taskID");
-
-            Map<String, Object> task = mySql.getTask(taskID);
-
-            usersNamesList = setFirst(mySql.getUserName(username), usersNamesList);
-
-            usersNamesList = setFirst(task.get("assignee").toString(), usersNamesList);
-            priorityList = setFirst(task.get("priority").toString(), priorityList);
-            statusList = setFirst(task.get("status").toString(), statusList);
-
-            pageVariables.put("assignee", getOptionsHTML(usersNamesList));
-            pageVariables.put("priority", getOptionsHTML(priorityList));
-            pageVariables.put("status", getOptionsHTML(statusList));
-
-            pageVariables.put("name", task.get("name"));
-            pageVariables.put("project", task.get("project"));
-            pageVariables.put("contact_person", task.get("contact_person") == null ? "" : task.get("contact_person"));
-            pageVariables.put("contact", task.get("contact") == null ? "" : task.get("contact"));
-            pageVariables.put("creator", task.get("creator"));
-            pageVariables.put("create_time", task.get("create_date"));
-            pageVariables.put("description", task.get("description"));
-
-            if (mySql.getUserClass(session.getAttribute("username").toString()).equals("admin")) {
-                pageVariables.put("admin", "<a align=\"right\" href=\"\\editUsers\">Users</a>");
-            } else {
-                pageVariables.put("admin", "");
-            }
-
-
-            pageVariables.put("taskID", request.getParameter("taskID"));
-
-            if (mySql.getUserClass(username) == "limited") {
-                response.getWriter().println(PageGenerator.instance().getPage("taskLimited.html", pageVariables));
-            }else {
-                response.getWriter().println(PageGenerator.instance().getPage("task.html", pageVariables));
-            }
+            response.sendRedirect("/newTask");
+            return;
         }
+
+        String taskID = request.getParameter("taskID");
+
+        Map<String, Object> task = mySql.getTask(taskID);
+
+        usersNamesList = mySql.getUsersNames();
+
+        priorityList.clear();
+        statusList.clear();
+
+        priorityList.add("low");
+        priorityList.add("mid");
+        priorityList.add("high");
+
+        statusList.add("Backlog");
+        statusList.add("Develop");
+        statusList.add("Done");
+        statusList.add("Obsolete");
+
+        usersNamesList = setFirst(mySql.getUserName(username), usersNamesList);
+
+        usersNamesList = setFirst(task.get("assignee").toString(), usersNamesList);
+        priorityList = setFirst(task.get("priority").toString(), priorityList);
+        statusList = setFirst(task.get("status").toString(), statusList);
+
+        pageVariables.put("assignee", getOptionsHTML(usersNamesList));
+        pageVariables.put("priority", getOptionsHTML(priorityList));
+        pageVariables.put("status", getOptionsHTML(statusList));
+        pageVariables.put("name", task.get("name"));
+        pageVariables.put("project", task.get("project"));
+        pageVariables.put("contact_person", task.get("contact_person") == null ? "" : task.get("contact_person"));
+        pageVariables.put("contact", task.get("contact") == null ? "" : task.get("contact"));
+        pageVariables.put("creator", task.get("creator"));
+        pageVariables.put("create_time", task.get("create_date"));
+        pageVariables.put("description", task.get("description"));
+
+        if (mySql.getUserClass(session.getAttribute("username").toString()).equals("admin")) {
+            pageVariables.put("admin", "<a align=\"right\" href=\"\\editUsers\">Users</a>");
+        } else {
+            pageVariables.put("admin", "");
+        }
+
+
+        pageVariables.put("taskID", request.getParameter("taskID"));
+
+        if (mySql.getUserClass(username).equals("limited")) {
+            response.getWriter().println(PageGenerator.instance().getPage("taskLimited.html", pageVariables));
+        }else {
+            response.getWriter().println(PageGenerator.instance().getPage("task.html", pageVariables));
+        }
+
         response.setStatus(HttpServletResponse.SC_OK);
     }
 

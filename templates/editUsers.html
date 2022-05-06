@@ -1,13 +1,9 @@
-<!DOCTYPE html>
-<head>
-    <meta charset="UTF-8">
-    <title>task</title>
-</head>
+<!doctype html>
+<title>Tasks</title>
 <style>
 * {
   box-sizing: border-box;
 }
-
 body {
   display: flex;
   min-height: 100vh;
@@ -17,20 +13,6 @@ body {
 
 table {
   width: 100%;
-  min-height: 50vh;
-}
-
-div {
-  border: thin solid black;
-
-      display:block;
-      overflow: hidden;
-}
-
-#des {
-  height: 30vh;
-  width: 100%;
-  font-size:24px;
 }
 
 #main {
@@ -59,13 +41,35 @@ header, footer, article, nav, aside {
 }
 </style>
 <body>
-<table>
-    <td align="left">${username}</td>
-    <td align="right">${admin}</td>
-</table>
+<header>
+    <table width="100%">
+        <td><a href="/logout">Logout</a> </td>
+        <td align="left">${username}</td>
+        <td align="right">${admin}</td>
+    </table>
+</header>
 <div id="main">
     <article>
-
+        ${users}
+        <hr>
+        Новый пользователь:
+        <form method="post" action="/editUsers">
+            <table border="1">
+            <tr>
+                <td><input name="login" type="login" placeholder="login"></td>
+                <td><input name="password" placeholder="password"></td>
+                <td><input name="name" type="name" placeholder="name"></td>
+                <td>
+                    <select name="class">
+                        <option>user</option>
+                        <option>admin</option>
+                        <option>limited</option>
+                    </select>
+                </td>
+                <td><input name="action" type="submit" value="add"></td>
+            </tr>
+            </table>
+        </form>
     </article>
     <nav>
         <form action="/tasks" method="POST">
@@ -87,9 +91,9 @@ header, footer, article, nav, aside {
             </select>
             <input type="submit" value="Ok">
         </form>
-        <form action="/task" method="GET"> <input type="submit" value="new Task"> </form>
+
     </nav>
     <!--<aside>Aside</aside> -->
 </div>
-<footer>Footer</footer>
+<footer>${newTask}</footer>
 </body>

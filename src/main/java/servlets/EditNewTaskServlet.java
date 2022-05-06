@@ -61,6 +61,20 @@ public class EditNewTaskServlet extends HttpServlet {
         pageVariables.put("Status", getOptionsHTML(statusList));
         pageVariables.put("Priority", getOptionsHTML(priorityList));
 
+        usersNamesList = mySql.getUsersNames();
+
+        priorityList.clear();
+        statusList.clear();
+
+        priorityList.add("low");
+        priorityList.add("mid");
+        priorityList.add("high");
+
+        statusList.add("Backlog");
+        statusList.add("Develop");
+        statusList.add("Done");
+        statusList.add("Obsolete");
+
         pageVariables.put("assignee", getOptionsHTML(usersNamesList));
         pageVariables.put("priority", getOptionsHTML(priorityList));
         pageVariables.put("status", getOptionsHTML(statusList));
@@ -78,6 +92,8 @@ public class EditNewTaskServlet extends HttpServlet {
         } else {
             pageVariables.put("admin", "");
         }
+
+//        TODO remove "*" from select
 
         response.setStatus(HttpServletResponse.SC_OK);
 

@@ -55,6 +55,7 @@ header, footer, article, nav, aside {
 <body>
 <header>
     <table width="100%">
+        <td><a href="/logout">Logout</a> </td>
         <td align="left">${username}</td>
         <td align="right">${admin}</td>
     </table>
@@ -106,9 +107,9 @@ header, footer, article, nav, aside {
             </select>
             <input type="submit" value="Ok">
         </form>
-        <form action="/task" method="GET"> <input type="submit" value="new Task"> </form>
+
     </nav>
     <!--<aside>Aside</aside> -->
 </div>
-<footer>Footer</footer>
+<footer><form action="/newTask" method="GET"> <input type="submit" value="new Task"> </form></footer>
 </body>
